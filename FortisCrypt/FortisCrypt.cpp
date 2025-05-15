@@ -138,7 +138,6 @@ std::vector<unsigned char> aesGCMDecrypt(const std::vector<unsigned char>& ciphe
 }
 
 int main() {
-    
     OpenSSL_add_all_algorithms();
     ERR_load_crypto_strings();
 
