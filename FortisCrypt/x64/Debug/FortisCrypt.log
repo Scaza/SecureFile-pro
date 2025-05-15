@@ -1,3 +1,6 @@
-﻿  FortisCrypt.vcxproj -> C:\Users\willi\source\repos\FortisCrypt\x64\Debug\FortisCrypt.exe
+﻿  FortisCrypt.cpp
+C:\Users\willi\source\repos\FortisCrypt\FortisCrypt\FortisCrypt.cpp(53,85): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\willi\source\repos\FortisCrypt\FortisCrypt\FortisCrypt.cpp(99,86): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  FortisCrypt.vcxproj -> C:\Users\willi\source\repos\FortisCrypt\x64\Debug\FortisCrypt.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.
