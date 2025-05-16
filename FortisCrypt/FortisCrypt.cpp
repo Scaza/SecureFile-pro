@@ -1,165 +1,146 @@
-#include <openssl/evp.h>
-#include <openssl/pem.h>
-#include <openssl/rand.h>
-#include <openssl/err.h>
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <cstring>
+#include <openssl/evp.h>
+#include <openssl/rand.h>
 
-void handleErrors() {
-    ERR_print_errors_fp(stderr);
-    abort();
-}
+class FileEncryptor {
+private:
+    std::string inputFilePath;
+    std::string outputFilePath;
+    std::vector<unsigned char> aesKey; // 256-bit key (32 bytes)
 
-bool generateAESKey(std::vector<unsigned char>& key, std::vector<unsigned char>& iv) {
-    key.resize(32); // AES-256
-    iv.resize(12);  // GCM standard
-    return RAND_bytes(key.data(), key.size()) && RAND_bytes(iv.data(), iv.size());
-}
+public:
+    FileEncryptor(const std::string& inPath, const std::string& outPath)
+        : inputFilePath(inPath), outputFilePath(outPath) {}
 
-std::vector<unsigned char> rsaEncryptKey(const std::vector<unsigned char>& key, const std::string& public_key_file) {
-    FILE* pubKeyFile = fopen(public_key_file.c_str(), "r");
-    if (!pubKeyFile) handleErrors();
+    void setKey(const std::vector<unsigned char>& key) {
+        if (key.size() != 32) {
+            throw std::runtime_error("AES key must be 256 bits (32 bytes).");
+        }
+        aesKey = key;
+    }
 
-    EVP_PKEY* pubKey = PEM_read_PUBKEY(pubKeyFile, nullptr, nullptr, nullptr);
-    fclose(pubKeyFile);
-    if (!pubKey) handleErrors();
+    void encryptFile();
+    void decryptFile();
+};
 
-    EVP_PKEY_CTX* ctx = EVP_PKEY_CTX_new(pubKey, nullptr);
-    if (!ctx) handleErrors();
+void FileEncryptor::encryptFile() {
+    const int ivLength = 12; // Recommended IV length for GCM
+    const int tagLength = 16;
+    unsigned char iv[ivLength];
+    unsigned char tag[tagLength];
 
-    if (EVP_PKEY_encrypt_init(ctx) <= 0) handleErrors();
+    RAND_bytes(iv, ivLength); // Generate random IV
 
-    size_t outlen;
-    if (EVP_PKEY_encrypt(ctx, nullptr, &outlen, key.data(), key.size()) <= 0)
-        handleErrors();
+    std::ifstream infile(inputFilePath, std::ios::binary);
+    std::ofstream outfile(outputFilePath, std::ios::binary);
+    if (!infile || !outfile) throw std::runtime_error("File error during encryption.");
 
-    std::vector<unsigned char> encrypted_key(outlen);
-    if (EVP_PKEY_encrypt(ctx, encrypted_key.data(), &outlen, key.data(), key.size()) <= 0)
-        handleErrors();
-
-    encrypted_key.resize(outlen);
-    EVP_PKEY_free(pubKey);
-    EVP_PKEY_CTX_free(ctx);
-    return encrypted_key;
-}
-
-std::vector<unsigned char> aesGCMEncrypt(const std::vector<unsigned char>& plaintext, const std::vector<unsigned char>& key, const std::vector<unsigned char>& iv, std::vector<unsigned char>& tag) {
-    EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
-    if (!ctx) handleErrors();
-
-    if (EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), nullptr, nullptr, nullptr) != 1)
-        handleErrors();
-
-    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN, iv.size(), nullptr);
-    if (EVP_EncryptInit_ex(ctx, nullptr, nullptr, key.data(), iv.data()) != 1)
-        handleErrors();
+    std::vector<unsigned char> plaintext((std::istreambuf_iterator<char>(infile)),
+        std::istreambuf_iterator<char>());
 
     std::vector<unsigned char> ciphertext(plaintext.size());
+
+    EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
     int len;
+    int ciphertext_len;
 
-    if (EVP_EncryptUpdate(ctx, ciphertext.data(), &len, plaintext.data(), plaintext.size()) != 1)
-        handleErrors();
+    EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), nullptr, nullptr, nullptr);
+    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN, ivLength, nullptr);
+    EVP_EncryptInit_ex(ctx, nullptr, nullptr, aesKey.data(), iv);
 
-    int ciphertext_len = len;
+    EVP_EncryptUpdate(ctx, ciphertext.data(), &len, plaintext.data(), plaintext.size());
+    ciphertext_len = len;
 
-    if (EVP_EncryptFinal_ex(ctx, ciphertext.data() + len, &len) != 1)
-        handleErrors();
+    EVP_EncryptFinal_ex(ctx, ciphertext.data() + len, &len);
     ciphertext_len += len;
 
-    tag.resize(16);
-    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, 16, tag.data());
-
+    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, tagLength, tag);
     EVP_CIPHER_CTX_free(ctx);
-    ciphertext.resize(ciphertext_len);
-    return ciphertext;
+
+    // Write IV + ciphertext + tag to output file
+    outfile.write((char*)iv, ivLength);
+    outfile.write((char*)ciphertext.data(), ciphertext_len);
+    outfile.write((char*)tag, tagLength);
 }
 
-std::vector<unsigned char> rsaDecryptKey(const std::vector<unsigned char>& encrypted_key, const std::string& private_key_file) {
-    FILE* privKeyFile = fopen(private_key_file.c_str(), "r");
-    if (!privKeyFile) handleErrors();
+void FileEncryptor::decryptFile() {
+    const int ivLength = 12;
+    const int tagLength = 16;
 
-    EVP_PKEY* privKey = PEM_read_PrivateKey(privKeyFile, nullptr, nullptr, nullptr);
-    fclose(privKeyFile);
-    if (!privKey) handleErrors();
+    std::ifstream infile(inputFilePath, std::ios::binary);
+    std::ofstream outfile(outputFilePath, std::ios::binary);
+    if (!infile || !outfile) throw std::runtime_error("File error during decryption.");
 
-    EVP_PKEY_CTX* ctx = EVP_PKEY_CTX_new(privKey, nullptr);
-    if (!ctx) handleErrors();
+    infile.seekg(0, std::ios::end);
+    size_t totalSize = infile.tellg();
+    infile.seekg(0, std::ios::beg);
 
-    if (EVP_PKEY_decrypt_init(ctx) <= 0) handleErrors();
+    std::vector<unsigned char> iv(ivLength);
+    infile.read((char*)iv.data(), ivLength);
 
-    size_t outlen;
-    if (EVP_PKEY_decrypt(ctx, nullptr, &outlen, encrypted_key.data(), encrypted_key.size()) <= 0)
-        handleErrors();
+    size_t ciphertextSize = totalSize - ivLength - tagLength;
+    std::vector<unsigned char> ciphertext(ciphertextSize);
+    infile.read((char*)ciphertext.data(), ciphertextSize);
 
-    std::vector<unsigned char> decrypted_key(outlen);
-    if (EVP_PKEY_decrypt(ctx, decrypted_key.data(), &outlen, encrypted_key.data(), encrypted_key.size()) <= 0)
-        handleErrors();
+    std::vector<unsigned char> tag(tagLength);
+    infile.read((char*)tag.data(), tagLength);
 
-    decrypted_key.resize(outlen);
-    EVP_PKEY_free(privKey);
-    EVP_PKEY_CTX_free(ctx);
-    return decrypted_key;
-}
-
-std::vector<unsigned char> aesGCMDecrypt(const std::vector<unsigned char>& ciphertext, const std::vector<unsigned char>& key, const std::vector<unsigned char>& iv, const std::vector<unsigned char>& tag) {
+    std::vector<unsigned char> plaintext(ciphertextSize);
     EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
-    if (!ctx) handleErrors();
-
-    if (EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), nullptr, nullptr, nullptr) != 1)
-        handleErrors();
-
-    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN, iv.size(), nullptr);
-    if (EVP_DecryptInit_ex(ctx, nullptr, nullptr, key.data(), iv.data()) != 1)
-        handleErrors();
-
-    std::vector<unsigned char> plaintext(ciphertext.size());
     int len;
+    int plaintext_len;
 
-    if (EVP_DecryptUpdate(ctx, plaintext.data(), &len, ciphertext.data(), ciphertext.size()) != 1)
-        handleErrors();
+    EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), nullptr, nullptr, nullptr);
+    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN, ivLength, nullptr);
+    EVP_DecryptInit_ex(ctx, nullptr, nullptr, aesKey.data(), iv.data());
 
-    int plaintext_len = len;
-    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, tag.size(), (void*)tag.data());
+    EVP_DecryptUpdate(ctx, plaintext.data(), &len, ciphertext.data(), ciphertext.size());
+    plaintext_len = len;
 
-    int ret = EVP_DecryptFinal_ex(ctx, plaintext.data() + len, &len);
+    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, tagLength, tag.data());
+
+    if (EVP_DecryptFinal_ex(ctx, plaintext.data() + len, &len) <= 0) {
+        EVP_CIPHER_CTX_free(ctx);
+        throw std::runtime_error("Decryption failed: authentication error.");
+    }
+    plaintext_len += len;
+
     EVP_CIPHER_CTX_free(ctx);
-
-    if (ret > 0) {
-        plaintext_len += len;
-        plaintext.resize(plaintext_len);
-        return plaintext;
-    }
-    else {
-        std::cerr << "Decryption failed: authentication tag mismatch." << std::endl;
-        return {};
-    }
+    outfile.write((char*)plaintext.data(), plaintext_len);
 }
 
 int main() {
-    
-    OpenSSL_add_all_algorithms();
-    ERR_load_crypto_strings();
+    try {
+        // Generate random 256-bit AES key
+        std::vector<unsigned char> aesKey(32);
+        RAND_bytes(aesKey.data(), 32);
 
-    std::vector<unsigned char> aes_key, iv;
-    if (!generateAESKey(aes_key, iv)) handleErrors();
+        // Set file paths
+        std::string originalFile = "plain.txt";
+        std::string encryptedFile = "encrypted.bin";
+        std::string decryptedFile = "decrypted.txt";
 
-    std::vector<unsigned char> tag;
-    std::string message = "Confidential file data.";
-    std::vector<unsigned char> plaintext(message.begin(), message.end());
+        // Create dummy plain file
+        std::ofstream plainOut(originalFile);
+        plainOut << "This is a test file for AES-256-GCM encryption.";
+        plainOut.close();
 
-    auto ciphertext = aesGCMEncrypt(plaintext, aes_key, iv, tag);
-    auto encrypted_key = rsaEncryptKey(aes_key, "public.pem");
+        FileEncryptor encryptor(originalFile, encryptedFile);
+        encryptor.setKey(aesKey);
+        encryptor.encryptFile();
+        std::cout << "Encryption successful.\n";
 
-    auto decrypted_key = rsaDecryptKey(encrypted_key, "private.pem");
-    auto decrypted_text = aesGCMDecrypt(ciphertext, decrypted_key, iv, tag);
+        FileEncryptor decryptor(encryptedFile, decryptedFile);
+        decryptor.setKey(aesKey);
+        decryptor.decryptFile();
+        std::cout << "Decryption successful.\n";
 
-    std::string result(decrypted_text.begin(), decrypted_text.end());
-    std::cout << "Decrypted text: " << result << std::endl;
+    }
+    catch (const std::exception& ex) {
+        std::cerr << "Error: " << ex.what() << std::endl;
+    }
 
-    EVP_cleanup();
-    CRYPTO_cleanup_all_ex_data();
-    ERR_free_strings();
     return 0;
 }
