@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\willi\\source\\repos\\FortisCrypt\\",
+  "WorkspaceRootPath": "C:\\Users\\shana\\Documents\\GitHub\\SecureFile-pro\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0E8E87D2-2264-4E78-BCAA-5077BB185C79}|FortisCrypt\\FortisCrypt.vcxproj|C:\\Users\\willi\\source\\repos\\FortisCrypt\\FortisCrypt\\FortisCrypt.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{0E8E87D2-2264-4E78-BCAA-5077BB185C79}|FortisCrypt\\FortisCrypt.vcxproj|C:\\Users\\shana\\Documents\\GitHub\\SecureFile-pro\\FortisCrypt\\FortisCrypt.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{0E8E87D2-2264-4E78-BCAA-5077BB185C79}|FortisCrypt\\FortisCrypt.vcxproj|solutionrelative:FortisCrypt\\FortisCrypt.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
@@ -20,19 +20,28 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "corecrt_wstdio.h",
-              "DocumentMoniker": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\corecrt_wstdio.h",
-              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\corecrt_wstdio.h",
-              "ToolTip": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\corecrt_wstdio.h",
-              "RelativeToolTip": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\corecrt_wstdio.h",
-              "ViewState": "AQIAAB0AAAAAAAAAAAAewDMAAAAQAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-05-04T06:14:43.742Z"
+              "DocumentIndex": 0,
+              "Title": "FortisCrypt.cpp",
+              "DocumentMoniker": "C:\\Users\\shana\\Documents\\GitHub\\SecureFile-pro\\FortisCrypt\\FortisCrypt.cpp",
+              "RelativeDocumentMoniker": "FortisCrypt\\FortisCrypt.cpp",
+              "ToolTip": "C:\\Users\\shana\\Documents\\GitHub\\SecureFile-pro\\FortisCrypt\\FortisCrypt.cpp",
+              "RelativeToolTip": "FortisCrypt\\FortisCrypt.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-05-04T03:56:57.457Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
               "$type": "Document",
@@ -48,20 +57,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "FortisCrypt.cpp",
-              "DocumentMoniker": "C:\\Users\\willi\\source\\repos\\FortisCrypt\\FortisCrypt\\FortisCrypt.cpp",
-              "RelativeDocumentMoniker": "FortisCrypt\\FortisCrypt.cpp",
-              "ToolTip": "C:\\Users\\willi\\source\\repos\\FortisCrypt\\FortisCrypt\\FortisCrypt.cpp",
-              "RelativeToolTip": "FortisCrypt\\FortisCrypt.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAB8AAAAhAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-05-04T03:56:57.457Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+              "DocumentIndex": 2,
+              "Title": "corecrt_wstdio.h",
+              "DocumentMoniker": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\corecrt_wstdio.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\corecrt_wstdio.h",
+              "ToolTip": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\corecrt_wstdio.h",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\corecrt_wstdio.h",
+              "ViewState": "AQIAAB0AAAAAAAAAAAAewDMAAAAQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-05-04T06:14:43.742Z"
             }
           ]
         }

@@ -20,7 +20,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -28,15 +28,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "corecrt_wstdio.h",
-              "DocumentMoniker": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\corecrt_wstdio.h",
-              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\corecrt_wstdio.h",
-              "ToolTip": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\corecrt_wstdio.h",
-              "RelativeToolTip": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\corecrt_wstdio.h",
-              "ViewState": "AQIAAB0AAAAAAAAAAAAewDMAAAAQAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-05-04T06:14:43.742Z"
+              "DocumentIndex": 0,
+              "Title": "FortisCrypt.cpp",
+              "DocumentMoniker": "C:\\Users\\shana\\Documents\\GitHub\\SecureFile-pro\\FortisCrypt\\FortisCrypt.cpp",
+              "RelativeDocumentMoniker": "FortisCrypt\\FortisCrypt.cpp",
+              "ToolTip": "C:\\Users\\shana\\Documents\\GitHub\\SecureFile-pro\\FortisCrypt\\FortisCrypt.cpp",
+              "RelativeToolTip": "FortisCrypt\\FortisCrypt.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-05-04T03:56:57.457Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
               "$type": "Document",
@@ -52,16 +57,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "FortisCrypt.cpp",
-              "DocumentMoniker": "C:\\Users\\shana\\Documents\\GitHub\\SecureFile-pro\\FortisCrypt\\FortisCrypt.cpp",
-              "RelativeDocumentMoniker": "FortisCrypt\\FortisCrypt.cpp",
-              "ToolTip": "C:\\Users\\shana\\Documents\\GitHub\\SecureFile-pro\\FortisCrypt\\FortisCrypt.cpp",
-              "RelativeToolTip": "FortisCrypt\\FortisCrypt.cpp",
-              "ViewState": "AgIAAJEAAAAAAAAAAAAAABMAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-05-04T03:56:57.457Z",
-              "EditorCaption": ""
+              "DocumentIndex": 2,
+              "Title": "corecrt_wstdio.h",
+              "DocumentMoniker": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\corecrt_wstdio.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\corecrt_wstdio.h",
+              "ToolTip": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\corecrt_wstdio.h",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22000.0\\ucrt\\corecrt_wstdio.h",
+              "ViewState": "AQIAAB0AAAAAAAAAAAAewDMAAAAQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-05-04T06:14:43.742Z"
             }
           ]
         }

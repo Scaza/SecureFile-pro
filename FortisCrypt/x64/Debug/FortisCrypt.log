@@ -1,7 +1,31 @@
 ﻿  FortisCrypt.cpp
-C:\Users\willi\source\repos\FortisCrypt\FortisCrypt\FortisCrypt.cpp(53,85): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\willi\source\repos\FortisCrypt\FortisCrypt\FortisCrypt.cpp(99,86): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  LINK : C:\Users\willi\source\repos\FortisCrypt\x64\Debug\FortisCrypt.exe not found or not built by the last incremental link; performing full link
-  FortisCrypt.vcxproj -> C:\Users\willi\source\repos\FortisCrypt\x64\Debug\FortisCrypt.exe
+C:\Users\shana\source\repos\vcpkg\installed\x64-windows\include\openssl\applink.c(130,47): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  (compiling source file 'FortisCrypt.cpp')
+  
+C:\Users\shana\source\repos\vcpkg\installed\x64-windows\include\openssl\applink.c(138,46): warning C4996: '_open': This function or variable may be unsafe. Consider using _sopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  (compiling source file 'FortisCrypt.cpp')
+  
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(16,20): warning C4996: 'RSA_new': Since OpenSSL 3.0
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(20,13): warning C4996: 'RSA_generate_key_ex': Since OpenSSL 3.0
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(25,25): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(29,9): warning C4996: 'PEM_write_RSA_PUBKEY': Since OpenSSL 3.0
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(33,26): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(36,9): warning C4996: 'PEM_write_RSAPrivateKey': Since OpenSSL 3.0
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(39,9): warning C4996: 'RSA_free': Since OpenSSL 3.0
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(59,58): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(50,23): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(52,20): warning C4996: 'PEM_read_RSA_PUBKEY': Since OpenSSL 3.0
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(58,49): warning C4996: 'RSA_size': Since OpenSSL 3.0
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(59,28): warning C4996: 'RSA_public_encrypt': Since OpenSSL 3.0
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(61,9): warning C4996: 'RSA_free': Since OpenSSL 3.0
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(89,65): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(75,24): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(80,20): warning C4996: 'PEM_read_RSAPrivateKey': Since OpenSSL 3.0
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(88,49): warning C4996: 'RSA_size': Since OpenSSL 3.0
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(89,28): warning C4996: 'RSA_private_decrypt': Since OpenSSL 3.0
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(91,9): warning C4996: 'RSA_free': Since OpenSSL 3.0
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(160,85): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(206,86): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  FortisCrypt.vcxproj -> C:\Users\shana\Documents\GitHub\SecureFile-pro\x64\Debug\FortisCrypt.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.
