@@ -24,8 +24,9 @@ C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(86,20
 C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(93,49): warning C4996: 'RSA_size': Since OpenSSL 3.0
 C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(94,28): warning C4996: 'RSA_private_decrypt': Since OpenSSL 3.0
 C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(96,9): warning C4996: 'RSA_free': Since OpenSSL 3.0
-C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(196,85): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(242,86): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(171,85): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\shana\Documents\GitHub\SecureFile-pro\FortisCrypt\FortisCrypt.cpp(217,86): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  LINK : C:\Users\shana\Documents\GitHub\SecureFile-pro\x64\Debug\FortisCrypt.exe not found or not built by the last incremental link; performing full link
      Creating library C:\Users\shana\Documents\GitHub\SecureFile-pro\x64\Debug\FortisCrypt.lib and object C:\Users\shana\Documents\GitHub\SecureFile-pro\x64\Debug\FortisCrypt.exp
   FortisCrypt.vcxproj -> C:\Users\shana\Documents\GitHub\SecureFile-pro\x64\Debug\FortisCrypt.exe
   'pwsh.exe' is not recognized as an internal or external command,

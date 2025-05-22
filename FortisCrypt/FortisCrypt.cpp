@@ -121,31 +121,6 @@ private:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // simple AES-256-GCM file encryptor/decryptor using OpenSSL.
 class FileEncryptor {
 private:
