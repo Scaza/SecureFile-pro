@@ -3,9 +3,150 @@
 #include <vector>
 #include <openssl/evp.h>
 #include <openssl/rand.h>
+#include <openssl/rsa.h>
+#include <openssl/pem.h>
+#include <openssl/err.h>
+#include <openssl/applink.c>
 /// <summary>
 /// Random commit to test more testing
 /// </summary>
+
+
+
+
+///////////////////////////////////////////////////////
+//RSA Key Manager Class
+//////////////////////////////////////////////////////
+class RSAKEYManager{
+public:
+//Generate RSA Key Pair
+    void generateKeyPair(const std::string& PUBKEY, const std::string& privateKeyFile) {
+        RSA* rsa = RSA_new();
+        BIGNUM* bne = BN_new();
+        BN_set_word(bne, RSA_F4);
+
+        if (RSA_generate_key_ex(rsa, 4096, bne, nullptr) != 1) {
+            handleOpenSSLError();
+        }
+
+        // Save public key to file
+        FILE* pubFile = fopen(PUBKEY.c_str(), "wb");
+        if (!pubFile) throw std::runtime_error("Error opening public key file for writing.");
+
+        // PEM_write_RSA_PUBKEY(pubFile, rsa);
+        PEM_write_RSA_PUBKEY(pubFile, rsa);
+        fclose(pubFile);
+
+        // Save private key to file
+        FILE* privFile = fopen(privateKeyFile.c_str(), "wb");
+        if (!privFile) throw std::runtime_error("Error opening private key file for writing.");
+
+        PEM_write_RSAPrivateKey(privFile, rsa, nullptr, nullptr, 0, nullptr, nullptr);
+        fclose(privFile);
+
+        RSA_free(rsa);
+        BN_free(bne);
+
+        std::cout << "RSA Key pair generated and saved to files.\n";
+    }
+
+    //Encrpt the AES key using the public RSA key
+    std::vector<unsigned char> encryptAESKey(const std::vector<unsigned char>& aesKey, const std::string& publicKeyFile) {
+
+        //Load the public key   
+
+        FILE* pubFp = fopen(publicKeyFile.c_str(), "rb");
+        if (!pubFp) throw std::runtime_error("Error opening public key file for reading.");
+        RSA* rsa = PEM_read_RSA_PUBKEY(pubFp, nullptr, nullptr, nullptr);
+        fclose(pubFp);
+
+        if (!rsa) throw std::runtime_error("Error reading public key.");
+
+        //Encrypt the AES key using the public RSA key
+        std::vector<unsigned char> encryptedKey(RSA_size(rsa));
+        int encryptedLen = RSA_public_encrypt(aesKey.size(), aesKey.data(), encryptedKey.data(), rsa, RSA_PKCS1_OAEP_PADDING);
+
+        RSA_free(rsa);
+
+        if (encryptedLen == -1) {
+            handleOpenSSLError();
+        }
+
+        encryptedKey.resize(encryptedLen); // Resize to actual length
+
+        return encryptedKey;
+    }
+
+    //Decrypt the AES key using the private RSA key
+    std::vector<unsigned char> decryptAESKey(const std::vector<unsigned char>& encryptedKey, const std::string& privateKeyFile) {
+
+        // Read the private key
+        FILE* privFp = fopen(privateKeyFile.c_str(), "rb");
+        if (!privFp) throw std::runtime_error("Error opening private key file for reading.");
+        RSA* rsa = PEM_read_RSAPrivateKey(privFp, nullptr, nullptr, nullptr);
+        fclose(privFp);
+
+        // Check if the private key was read successfully
+        if (!rsa) throw std::runtime_error("Error reading private key.");
+
+
+        std::vector<unsigned char> decryptedKey(RSA_size(rsa));
+        int decryptedLen = RSA_private_decrypt(encryptedKey.size(), encryptedKey.data(), decryptedKey.data(), rsa, RSA_PKCS1_OAEP_PADDING);
+
+        RSA_free(rsa);
+
+        if (decryptedLen == -1) {
+            handleOpenSSLError();
+        }
+        decryptedKey.resize(decryptedLen); // Resize to actual length
+        return decryptedKey;
+    }
+
+private:
+
+    //Handle OpenSSL errors
+    void handleOpenSSLError() {
+        char errBuffer[120];
+        ERR_load_crypto_strings();
+        ERR_error_string(ERR_get_error(), errBuffer);
+        ERR_free_strings();
+        throw std::runtime_error(std::string("OpenSSL error: ") + errBuffer);
+    }
+};
+
+
+///////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// simple AES-256-GCM file encryptor/decryptor using OpenSSL.
 class FileEncryptor {
 private:
     std::string inputFilePath;
@@ -115,9 +256,25 @@ void FileEncryptor::decryptFile() {
 
 int main() {
     try {
+		
+        //////////////////////////////////
+        // Initialize OpenSSL
+        //Generate RSA Key pair
+        RSAKEYManager keyManager;
+        keyManager.generateKeyPair("public.pem", "private.pem");
+
+        //////////////////////////////////////
+
         // Generate random 256-bit AES key
         std::vector<unsigned char> aesKey(32);
         RAND_bytes(aesKey.data(), 32);
+
+
+        /////////////////////////////////////
+		// Encrypt the AES key using RSA public key
+        std::vector<unsigned char> encryptedKey = keyManager.encryptAESKey(aesKey, "public.pem");
+        ////////////////////////////////////////
+
 
         // Set file paths
         std::string originalFile = "plain.txt";
@@ -129,11 +286,30 @@ int main() {
         plainOut << "This is a test file for AES-256-GCM encryption.";
         plainOut.close();
 
+		// Encrypt the file using AES key
         FileEncryptor encryptor(originalFile, encryptedFile);
         encryptor.setKey(aesKey);
         encryptor.encryptFile();
         std::cout << "Encryption successful.\n";
 
+
+
+        ////////////////////////////////////////////////
+		// Save the encrypted AES key to a file
+        std::vector<unsigned char> decryptedAESKey = keyManager.decryptAESKey(encryptedKey, "private.pem");
+        /////////////////////////////////////////////////
+
+
+        ////////////////////////////////////////////////
+		//decrypt the AES key using RSA private key
+		std::ofstream aesKeyOut("encrypted_aes_key.bin", std::ios::binary);
+		aesKeyOut.write((char*)decryptedAESKey.data(), decryptedAESKey.size());
+		aesKeyOut.close();
+        ///////////////////////////////////////////////////
+        
+
+
+		// Decrypt the file using the decrypted AES key   
         FileEncryptor decryptor(encryptedFile, decryptedFile);
         decryptor.setKey(aesKey);
         decryptor.decryptFile();
