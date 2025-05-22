@@ -3,7 +3,9 @@
 #include <vector>
 #include <openssl/evp.h>
 #include <openssl/rand.h>
-
+/// <summary>
+/// Random commit to test
+/// </summary>
 class FileEncryptor {
 private:
     std::string inputFilePath;
