@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <chrono>
 #include <openssl/evp.h>
 #include <openssl/rand.h>
 #include <openssl/rsa.h>
@@ -244,13 +245,13 @@ int main() {
         std::vector<unsigned char> aesKey(32);
         RAND_bytes(aesKey.data(), 32);
 
-
+        
         /////////////////////////////////////
 		// Encrypt the AES key using RSA public key
         std::vector<unsigned char> encryptedKey = keyManager.encryptAESKey(aesKey, "public.pem");
         ////////////////////////////////////////
 
-
+		// Save the encrypted AES key to a file
         // Set file paths
         std::string originalFile = "plain.txt";
         std::string encryptedFile = "encrypted.bin";
@@ -261,11 +262,30 @@ int main() {
         plainOut << "This is a test file for AES-256-GCM encryption.";
         plainOut.close();
 
+
+        /////////////////////////////////////////
+		// to monitor the time taken for encryption and decryption
+		auto start = std::chrono::high_resolution_clock::now();
+
+        /////////////////////////////////////////
+
+
+
+
+
+
+
+
 		// Encrypt the file using AES key
         FileEncryptor encryptor(originalFile, encryptedFile);
         encryptor.setKey(aesKey);
         encryptor.encryptFile();
-        std::cout << "Encryption successful.\n";
+
+		auto end = std::chrono::high_resolution_clock::now(); // kevin added End time monitoring
+        std::cout << "Encryption successful. Time taken:" 
+
+			<< std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+			<< " ms\n";
 
 
 
@@ -274,22 +294,25 @@ int main() {
         std::vector<unsigned char> decryptedAESKey = keyManager.decryptAESKey(encryptedKey, "private.pem");
         /////////////////////////////////////////////////
 
+        start = std::chrono::high_resolution_clock::now();
 
-        ////////////////////////////////////////////////
-		//decrypt the AES key using RSA private key
-		std::ofstream aesKeyOut("encrypted_aes_key.bin", std::ios::binary);
-		aesKeyOut.write((char*)decryptedAESKey.data(), decryptedAESKey.size());
-		aesKeyOut.close();
-        ///////////////////////////////////////////////////
-        
-
+      
 
 		// Decrypt the file using the decrypted AES key   
         FileEncryptor decryptor(encryptedFile, decryptedFile);
-        decryptor.setKey(aesKey);
+        decryptor.setKey(decryptedAESKey);
         decryptor.decryptFile();
-        std::cout << "Decryption successful.\n";
+        ////////////////////////////////////////////////////////
+		end = std::chrono::high_resolution_clock::now(); // kevin added time monitoring
+        std::cout << "Decryption successful. Time taken: "
 
+            << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+
+            << "ms\n";
+
+		OPENSSL_cleanse(aesKey.data(), aesKey.size());
+		OPENSSL_cleanse(encryptedKey.data(), encryptedKey.size());
+        ////////////////////////////////////////////////////////////
     }
     catch (const std::exception& ex) {
         std::cerr << "Error: " << ex.what() << std::endl;
